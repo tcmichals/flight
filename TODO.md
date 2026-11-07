@@ -3,7 +3,7 @@
 The only task tracker for putting the repos together. Each repo keeps its own TODO for its own work.
 
 - [ ] `inav/CMakeLists.txt`: use `ABSTRACTX_PATH` if passed in, otherwise fail; remove the `../` search and `FORCE`. A workspace at `~/projects/flight-stack` otherwise picks `~/projects/AbstractX`.
-- [ ] `make sitl`: INAV SITL builds against the pinned AbstractX.
+- [ ] `make sitl` builds and INAV's unit tests pass, but this says little about AbstractX: INAV does not link `abstractx_core`, and it searches its own older copies first (`inav/include/asp_tlp64.hpp` 152 lines vs AbstractX's 575, `pcie_bar_map.hpp`; `spsc_tlp_ring.hpp` and `src/abstractx_engine/coroutine_task.hpp` also need checking). Replace them with AbstractX's and link the real runtime; expect breakage.
 - [ ] `make pico`: Pico Plus 2 W firmware.
 - [ ] `make linux-a5e`: Buildroot image with `BR2_EXTERNAL` and `LINUX_OVERRIDE_SRCDIR` from this workspace.
 - [ ] A7A kernel: it is on another branch (`a7a_remoteproc_camera_usb`). Decide how this repo builds it.
