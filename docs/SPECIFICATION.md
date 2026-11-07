@@ -56,3 +56,11 @@
 * **Why**: the owner's decision, 2026-11-07. A copy of the tools is one more thing to drift.
 * **Verified by**: `spec-change-review`
 * **Implementation Target**: `Makefile`
+
+### `[SPEC-FLIGHT-07]` Docs Here Are About Putting It Together
+* **Requirement**: `docs/` holds the index, the guide and cross-repo evidence. Documents that belong to a project stay in that project and are linked, never copied.
+  `engineering_log.md` holds lessons that cross repos, in AbstractX's format and categories; a lesson about one project goes in that project's log.
+  A guide step counts as shown only with a record in `docs/verification/evidence/ledger.jsonl`.
+* **Why**: decided 2026-11-07. Copied docs drift as copied code does.
+* **Verified by**: `spec-change-review`
+* **Implementation Target**: `docs/README.md`, `docs/GUIDE.md`

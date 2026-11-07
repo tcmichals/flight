@@ -19,6 +19,11 @@ The only task tracker for putting the repos together. Each repo keeps its own TO
 - [ ] ESP32-P4 and HITL: check what exists.
 - [ ] Test: AbstractX C++ talks to the abstractx-fpga RTL under Verilator (interfaces differ on paper: AXI4-Lite vs Wishbone).
 
+## Tooling
+- [ ] Decide: replace the Makefile with CMake presets and `add_subdirectory` (recommended, not started).
+- [ ] Decide: matrix does not see `@impl` tags in `Makefile` and `default.xml`.
+- [ ] Commit the `inav` CMake path fix (owner's word needed) and pin it.
+
 ## Cleaning up
 - [ ] `check_isolation.py`: find copied files; remove existing references; then fail the build.
 - [ ] Remove `inav/external/AbstractX` and `AbstractX/rtl/pio` ([SPEC-FLIGHT-04]). First save the local edits in `~/projects/quadcopter/inav/external/AbstractX`.
