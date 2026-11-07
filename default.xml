@@ -9,8 +9,8 @@
   <!-- Flight: the default checkout. -->
   <project name="inav" path="inav" upstream="master"
            revision="09ee299fdce9f522ea29d4f467c6408d84cd67cf"/>
-  <!-- sync-s: AbstractX's own third_party/ submodules, at the commits AbstractX pins. -->
-  <project name="AbstractX" path="AbstractX" upstream="main" sync-s="true"
+  <!-- No sync-s: it pulls MicroPython's submodules recursively (1.8 GB). The Makefile fetches what a build needs. -->
+  <project name="AbstractX" path="AbstractX" upstream="main"
            revision="ec49b1e46d5426347ebb5ca5028ae2d0f41a0f9b"/>
   <project name="abstractx-fpga" path="abstractx-fpga" upstream="main"
            revision="6dad65d19d86be7b3bebf32b80d3060dc734741b"/>
