@@ -1,10 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- @impl [SPEC-STACK-02] docs/SPECIFICATION.md: the revisions below are the tested set. -->
+<!-- @impl [SPEC-FLIGHT-02] docs/SPECIFICATION.md: the revisions below are the tested set. -->
+<!-- @impl [SPEC-FLIGHT-04] docs/SPECIFICATION.md: projects are tied together only by this file. -->
 <manifest>
+  <remote name="github-ssh" fetch="git@github.com:tcmichals/"/>
   <remote name="github" fetch="https://github.com/tcmichals/"/>
   <remote name="buildroot-org" fetch="https://gitlab.com/buildroot.org/"/>
 
   <default remote="github" sync-j="6"/>
+
+  <!-- This repo. It follows main: it holds the pins, so it cannot pin itself. -->
+  <project name="flight" path="flight" remote="github-ssh" revision="main">
+    <linkfile src="Makefile" dest="Makefile"/>
+  </project>
 
   <!-- Flight: the default checkout. -->
   <project name="inav" path="inav" upstream="master"
@@ -18,7 +25,7 @@
   <project name="pio2" path="pio2" upstream="main"
            revision="89fc1b6d489402231547dcca09ab94257de4eecc"/>
 
-  <!-- Linux: only with repo init -g default,linux. -->
+  <!-- Linux: only with repo init -g default,linux. cubie-a5e is the Buildroot out-of-tree (BR2_EXTERNAL). -->
   <project name="buildroot" path="buildroot" remote="buildroot-org" upstream="master"
            groups="notdefault,linux"
            revision="9e9110bf23a86d1e312e23fc19921cd911f53861"/>
