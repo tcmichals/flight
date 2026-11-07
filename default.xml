@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- @impl [SPEC-STACK-02] docs/SPECIFICATION.md: the revisions below are the tested set. -->
+<manifest>
+  <remote name="github" fetch="https://github.com/tcmichals/"/>
+  <remote name="buildroot-org" fetch="https://gitlab.com/buildroot.org/"/>
+
+  <default remote="github" sync-j="6"/>
+
+  <!-- Flight: the default checkout. -->
+  <project name="inav" path="inav" upstream="master"
+           revision="09ee299fdce9f522ea29d4f467c6408d84cd67cf"/>
+  <!-- sync-s: AbstractX's own third_party/ submodules, at the commits AbstractX pins. -->
+  <project name="AbstractX" path="AbstractX" upstream="main" sync-s="true"
+           revision="ec49b1e46d5426347ebb5ca5028ae2d0f41a0f9b"/>
+  <project name="abstractx-fpga" path="abstractx-fpga" upstream="main"
+           revision="6dad65d19d86be7b3bebf32b80d3060dc734741b"/>
+  <!-- Same commit AbstractX pins at rtl/pio; the latest pio2 commit reports a failing test. -->
+  <project name="pio2" path="pio2" upstream="main"
+           revision="89fc1b6d489402231547dcca09ab94257de4eecc"/>
+
+  <!-- Linux: only with repo init -g default,linux. -->
+  <project name="buildroot" path="buildroot" remote="buildroot-org" upstream="master"
+           groups="notdefault,linux"
+           revision="9e9110bf23a86d1e312e23fc19921cd911f53861"/>
+  <project name="linux-cubie" path="linux-cubie" upstream="cubie-linux-7.1" clone-depth="1"
+           groups="notdefault,linux"
+           revision="9a5f36c0628d045be3fd67b5e1541b88c1335fda"/>
+  <project name="cubie-a5e" path="cubie-a5e" upstream="main"
+           groups="notdefault,linux"
+           revision="e67d77b39936f9668639b05c25143f80ab27a68a"/>
+</manifest>
