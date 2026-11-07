@@ -18,7 +18,7 @@ Written up in `inav/docs/ARCHITECTURE.md`: flight code and chip drivers (`inav`)
 
 | # | Step | Status |
 | :--- | :--- | :--- |
-| 1 | Get the workspace | Run on one PC |
+| 1 | Get the workspace | Fresh clone from GitHub run on one PC |
 | 2 | Build and run SITL | Runs, but on `inav`'s own copies of AbstractX code |
 | 3 | Put `inav` on the AbstractX runtime | Not started |
 | 4 | Build the Pico firmware | No `flight` target yet |
