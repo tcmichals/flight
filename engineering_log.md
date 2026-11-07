@@ -34,3 +34,11 @@
 * **Symptom**: `make matrix` shows 5 of 6 requirements as SPEC-ONLY, although `Makefile` and `default.xml` carry `@impl` tags.
 * **Cause (from reading the tool, not tested)**: `spectrace_matrix.py` scans only files whose suffix is in `CODE_EXTS`.
 * **Not done**: the owner decides between changing AbstractX's tool and moving the tags.
+
+## 2026-11-07: AbstractX's RTL and abstractx-fpga disagree
+
+* **Category**: `process-gap`
+* **What**: `abstractx-fpga` was split out with no PIO and with Wishbone, while `AbstractX/rtl` stayed all-PIO with no Wishbone, and AbstractX's rules were not changed. AbstractX does not mention `abstractx-fpga`, so a reader of its docs would build a design the Tang boards cannot hold.
+* **Decision**: `abstractx-fpga` is the FPGA path ([SPEC-FLIGHT-08]).
+* **Which check should have caught it**: none exists across repos. The copy check in `TODO.md` is meant to.
+

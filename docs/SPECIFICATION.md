@@ -39,8 +39,11 @@
   | :--- | :--- |
   | Flight code, chip drivers, routing, SITL and HITL setups | `inav` |
   | API, TLP bus, runtime, `hal/`, `IIoProcessor`, targets, transports, examples | `AbstractX` |
-  | FPGA IP (DShot, RC) | `abstractx-fpga` |
+  | FPGA RTL and IP, and their register maps ([SPEC-FLIGHT-08]) | `abstractx-fpga` |
   | PIO | `pio2` |
+  | CPU and SoC hardware facts: registers, IRQs, pins per chip | `AbstractX/targets/*/include/hal/ports.hpp` |
+  | Aircraft wiring: which pin goes where on this airframe | `inav` |
+  | Which versions work together | `flight` |
   | Kernel | `linux-cubie` |
   | Buildroot out-of-tree, Linux development | `cubie-a5e` |
 
@@ -64,3 +67,11 @@
 * **Why**: decided 2026-11-07. Copied docs drift as copied code does.
 * **Verified by**: `spec-change-review`
 * **Implementation Target**: `docs/README.md`, `docs/GUIDE.md`
+
+### `[SPEC-FLIGHT-08]` abstractx-fpga Is the FPGA Path; Small Boards Carry No PIO Tile
+* **Requirement**: `abstractx-fpga` is the single source of truth for FPGA RTL, IP blocks and their register maps. Tang Nano 9K and 20K
+  designs use its custom blocks and carry no PIO tile. On the RP2350, DShot and RC use `pio2` programs on the chip's own PIO. `inav` issues the same TLPs either way.
+* **Why**: owner's decision, 2026-11-07. Measured in `abstractx-fpga` [SPEC-FAB-02]: the whole custom design is 3,202 logic cells on the 9K; a PIO tile alone is 11,436 at 8 pins (does not fit the 9K) and 13,071 at 16 pins on the 20K.
+* **Verified by**: `flight-isolation`
+* **Implementation Target**: `default.xml`
+* **Not implemented yet**: `AbstractX/rtl` and `AbstractX/hw` still hold an all-PIO design, and AbstractX's rules and specs ([SPEC-ZYNQ-07], `AGENTS.md` section 11) still describe it (`TODO.md`). The PIO tile on Zynq is undecided.

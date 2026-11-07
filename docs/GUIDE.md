@@ -61,4 +61,4 @@ The same app on the real board, with a simulator behind some routes. What exists
 
 ## Other targets
 
-Not part of the first aircraft: A5E with Linux and the E906, FPGA IP through `abstractx-fpga`, ESP32-P4.
+Not part of the first aircraft: A5E with Linux and the E906, FPGA IP through `abstractx-fpga` (the FPGA path, with no PIO tile on the Tang boards), ESP32-P4.
