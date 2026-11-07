@@ -3,26 +3,20 @@
 The only task tracker for putting the repos together. Each repo keeps its own TODO for its own work.
 
 ## INAV on AbstractX
-- [ ] `inav/CMakeLists.txt`: use `ABSTRACTX_PATH` if passed in, otherwise `external/AbstractX`; remove the `../` search and `FORCE`.
 - [ ] Delete `inav/include/asp_tlp64.hpp` and `pcie_bar_map.hpp`; use AbstractX's (their layouts differ).
 - [ ] Replace `inav/src/abstractx_engine/coroutine_task.hpp` with AbstractX's runtime and link `abstractx_core`. Its pool reuses memory from the start when full (read, not tested).
 - [ ] Check whether `asp_coro.hpp`'s TLP awaiters can sit under `inav`'s `TlpChannel`. Change AbstractX only if its API lacks something.
 - [ ] Compare `inav/src/target/linux_common` and its Pico code with `AbstractX/targets`; remove what duplicates them, keep routing.
-- [ ] Decide SpecTrace in `inav`: tags, `Verified by`, `make spectrace --root inav`.
+- [ ] Decide SpecTrace in `inav`: tags, `Verified by`, checks with `--root inav`.
 - [ ] Fix `inav`'s docs: addresses in `ARCHITECTURE.md` differ from its code; 8 kHz vs the 1 kHz decision; "100% COMPLETE" claims.
 
 ## Builds
-- [ ] `make sitl` on real AbstractX runtime.
-- [ ] `make pico`: Pimoroni Pico Plus 2 W firmware.
-- [ ] `make a5e`: Buildroot with `BR2_EXTERNAL=cubie-a5e/project-cubie-a5e` and `LINUX_OVERRIDE_SRCDIR` from this workspace.
+- [ ] `sitl` preset on the real AbstractX runtime.
+- [ ] `pico` preset: Pimoroni Pico Plus 2 W firmware. The Pico SDK must load before the top-level `project()`.
+- [ ] Linux target: Buildroot with `BR2_EXTERNAL=cubie-a5e/project-cubie-a5e` and `LINUX_OVERRIDE_SRCDIR` from this workspace.
 - [ ] A7A kernel: it is on another branch (`a7a_remoteproc_camera_usb`). Decide how to build it.
 - [ ] ESP32-P4 and HITL: check what exists.
 - [ ] Test: AbstractX C++ talks to the abstractx-fpga RTL under Verilator (interfaces differ on paper: AXI4-Lite vs Wishbone).
-
-## Tooling
-- [ ] Decide: replace the Makefile with CMake presets and `add_subdirectory` (recommended, not started).
-- [ ] Decide: matrix does not see `@impl` tags in `Makefile` and `default.xml`.
-- [ ] Commit the `inav` CMake path fix (owner's word needed) and pin it.
 
 ## Cleaning up
 - [ ] `check_isolation.py`: find copied files; remove existing references; then fail the build.

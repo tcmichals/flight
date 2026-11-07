@@ -24,11 +24,12 @@ mkdir flight-workspace && cd flight-workspace
 repo init -u git@github.com:tcmichals/flight.git -b main     # add -g default,linux for Linux builds
 repo sync -c
 
-make status            # the checked-out commits
-make spectrace         # AbstractX's SpecTrace checks on this repo
-make matrix            # requirement -> code -> skills
-make check-isolation   # which repos still refer to a sibling (report only)
-make sitl              # INAV SITL against this workspace's AbstractX
+cmake --workflow --preset sitl                     # configure, build and test INAV SITL with this workspace's AbstractX
+
+cmake --build build/sitl --target flight-status    # the checked-out commits
+cmake --build build/sitl --target flight-spectrace # AbstractX's SpecTrace checks on this repo
+cmake --build build/sitl --target flight-matrix    # requirement -> code -> skills
+cmake --build build/sitl --target flight-isolation # which repos still refer to a sibling (report only)
 ```
 
 To work on a project, `repo start <topic> <project>` puts it on a branch; `repo sync` otherwise leaves

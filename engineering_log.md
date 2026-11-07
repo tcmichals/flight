@@ -24,16 +24,22 @@
 
 * **Category**: `product-bug`
 * **Symptom**: four INAV build folders held three different AbstractX paths, some pointing at a live working copy. `-DABSTRACTX_PATH=` was overwritten by `FORCE`.
-* **Which check should have caught it**: none existed. `make sitl` now fails if another AbstractX is used; it failed on the workspace at `~/projects/flight` before the fix and passes after.
+* **Which check should have caught it**: none existed. A `make sitl` guard failed on the workspace at `~/projects/flight` before the fix and passed after; the CMake build now passes the path in, so the guard is gone.
 * **Fix**: `inav/CMakeLists.txt` uses `ABSTRACTX_PATH` if passed, otherwise `external/AbstractX`, and stops with an error if the headers are missing.
-* **Not done**: the fix is uncommitted, on branch `flight-abstractx-path` in the workspace; `inav` commits need the owner's word, so `default.xml` does not pin it yet.
+* **Done**: committed to `inav` `master` as `2dbd23a` and pinned.
 
-## 2026-11-07: The matrix does not see tags in a Makefile or default.xml
+## 2026-11-07: The matrix did not see tags in build files
 
 * **Category**: `tool-bug`
-* **Symptom**: `make matrix` shows 5 of 6 requirements as SPEC-ONLY, although `Makefile` and `default.xml` carry `@impl` tags.
-* **Cause (from reading the tool, not tested)**: `spectrace_matrix.py` scans only files whose suffix is in `CODE_EXTS`.
-* **Not done**: the owner decides between changing AbstractX's tool and moving the tags.
+* **Symptom**: `spectrace_matrix.py --matrix` showed requirements as SPEC-ONLY although `Makefile` and `default.xml` carried `@impl` tags.
+* **Cause**: the scan covered only `CODE_EXTS`. AbstractX's own `CMakeLists.txt` tags were invisible too.
+* **Fix**: in AbstractX ([SPEC-AUDIT-07]). The new test failed on the old tool and passes on the new one; AbstractX went from 28 to 24 SPEC-ONLY requirements. Change review still covers code files only.
+
+## 2026-11-07: Replaced the Makefile with CMake presets
+
+* **Category**: `process-gap`
+* **Why**: a Makefile could only run separate builds side by side. As subdirectories, `inav` can link `abstractx_core` directly, and one compile database covers both.
+* **Needed in AbstractX**: [SPEC-BUILD-04]: it builds as a subproject without its apps and tests, and its target files stopped using `CMAKE_SOURCE_DIR`.
 
 ## 2026-11-07: AbstractX's RTL and abstractx-fpga disagree
 

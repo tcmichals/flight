@@ -10,15 +10,16 @@
 
   <!-- This repo. It follows main: it holds the pins, so it cannot pin itself. -->
   <project name="flight" path="flight" remote="github-ssh" revision="main">
-    <linkfile src="Makefile" dest="Makefile"/>
+    <linkfile src="CMakeLists.txt" dest="CMakeLists.txt"/>
+    <linkfile src="CMakePresets.json" dest="CMakePresets.json"/>
   </project>
 
   <!-- Flight: the default checkout. -->
   <project name="inav" path="inav" upstream="master"
-           revision="09ee299fdce9f522ea29d4f467c6408d84cd67cf"/>
-  <!-- No sync-s: it pulls MicroPython's submodules recursively (1.8 GB). The Makefile fetches what a build needs. -->
+           revision="2dbd23aa6f928dec94d29482c27dbf98b5fd953f"/>
+  <!-- No sync-s: it pulls MicroPython's submodules recursively (1.8 GB). CMakeLists.txt fetches what a build needs. -->
   <project name="AbstractX" path="AbstractX" upstream="main"
-           revision="ec49b1e46d5426347ebb5ca5028ae2d0f41a0f9b"/>
+           revision="e8aef0211b3b886b7880c864f6bf1086b3ac0cd9"/>
   <project name="abstractx-fpga" path="abstractx-fpga" upstream="main"
            revision="6dad65d19d86be7b3bebf32b80d3060dc734741b"/>
   <!-- Same commit AbstractX pins at rtl/pio; the latest pio2 commit reports a failing test. -->

@@ -36,12 +36,11 @@ Commands are in [the README](../README.md). The Linux group needs `-g default,li
 ### 2. Build and run SITL
 
 ```bash
-make sitl
-build/inav-sitl/run_unit_tests
-build/inav-sitl/inav_abstractx_sitl     # Ctrl+C to stop
+cmake --workflow --preset sitl          # configure, build, run INAV's 5 test programs
+build/sitl/inav/inav_abstractx_sitl     # Ctrl+C to stop
 ```
 
-Details: `inav/docs/SITL_SIMULATOR.md`. Passing does not show `inav` works on AbstractX: it does not link `abstractx_core` yet.
+Details: `inav/docs/SITL_SIMULATOR.md`. Passing does not show `inav` works on AbstractX: the build compiles `abstractx_core` alongside it, but `inav` does not link it yet.
 
 ### 3. Put `inav` on the AbstractX runtime
 

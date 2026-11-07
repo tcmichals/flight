@@ -11,12 +11,12 @@ description: "Check skill. Projects do not name each other by path, and every pr
 
 ## How to run
 
-From the workspace root:
+From the workspace root, after `cmake --preset sitl`:
 
 ```bash
-make check-isolation              # file count per project
+cmake --build build/sitl --target flight-isolation   # file count per project
 python3 flight/tools/check_isolation.py . --list
-make status                       # the checked-out commits
+cmake --build build/sitl --target flight-status      # the checked-out commits
 ```
 
 ## Pass criteria

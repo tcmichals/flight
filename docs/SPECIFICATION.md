@@ -6,8 +6,8 @@
 * **Why**: the repos reached into each other through `../` paths, home-directory paths and copied
   files, so a build depended on where it was checked out (2026-11-07: four INAV build folders held three different AbstractX paths).
 * **Verified by**: `flight-isolation`
-* **Implementation Target**: `Makefile`, `tools/check_isolation.py`
-* **Not implemented yet**: `tools/check_isolation.py` only reports. It fails the build once the existing references are removed. `BR2_EXTERNAL` and `LINUX_OVERRIDE_SRCDIR` have no make target yet.
+* **Implementation Target**: `CMakeLists.txt`, `tools/check_isolation.py`
+* **Not implemented yet**: `tools/check_isolation.py` only reports. It fails the build once the existing references are removed. `BR2_EXTERNAL` and `LINUX_OVERRIDE_SRCDIR` have no build target yet.
 
 ### `[SPEC-FLIGHT-02]` The Manifest Pins Are the Tested Set
 * **Requirement**: `default.xml` pins every project to a commit, never a branch, and the commit must be on
@@ -19,10 +19,10 @@
 
 ### `[SPEC-FLIGHT-03]` No Product Code Here
 * **Requirement**: this repo holds the manifest, build glue, cross-repo tests and the guide. The Buildroot
-  out-of-tree stays in `cubie-a5e/project-cubie-a5e`.
+  out-of-tree stays in `cubie-a5e/project-cubie-a5e`. `CMakeLists.txt` adds the projects as subdirectories, one CMake preset per target; the workspace root links to it.
 * **Why**: otherwise this becomes one more place where the same thing lives.
 * **Verified by**: `spec-change-review`
-* **Implementation Target**: `Makefile`
+* **Implementation Target**: `CMakeLists.txt`
 
 ### `[SPEC-FLIGHT-04]` Manifest, Not Submodules, Between Projects
 * **Requirement**: projects are tied together only by `default.xml`. A project keeps submodules only for
@@ -58,7 +58,7 @@
   Skills are links to AbstractX's; only skills about this repo itself live here.
 * **Why**: the owner's decision, 2026-11-07. A copy of the tools is one more thing to drift.
 * **Verified by**: `spec-change-review`
-* **Implementation Target**: `Makefile`
+* **Implementation Target**: `CMakeLists.txt`
 
 ### `[SPEC-FLIGHT-07]` Docs Here Are About Putting It Together
 * **Requirement**: `docs/` holds the index, the guide and cross-repo evidence. Documents that belong to a project stay in that project and are linked, never copied.

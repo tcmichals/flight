@@ -1,0 +1,36 @@
+{
+  "version": 6,
+  "cmakeMinimumRequired": { "major": 3, "minor": 25, "patch": 0 },
+  "configurePresets": [
+    {
+      "name": "sitl",
+      "displayName": "INAV SITL on the desktop",
+      "binaryDir": "${sourceDir}/build/sitl",
+      "cacheVariables": {
+        "ABSTRACTX_TARGET": "host",
+        "CMAKE_EXPORT_COMPILE_COMMANDS": "ON"
+      }
+    }
+  ],
+  "buildPresets": [
+    { "name": "sitl", "configurePreset": "sitl" }
+  ],
+  "testPresets": [
+    {
+      "name": "sitl",
+      "configurePreset": "sitl",
+      "output": { "outputOnFailure": true },
+      "execution": { "timeout": 300 }
+    }
+  ],
+  "workflowPresets": [
+    {
+      "name": "sitl",
+      "steps": [
+        { "type": "configure", "name": "sitl" },
+        { "type": "build", "name": "sitl" },
+        { "type": "test", "name": "sitl" }
+      ]
+    }
+  ]
+}
