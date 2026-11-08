@@ -30,7 +30,8 @@
 * **Why**: decided 2026-11-07. Side-by-side checkouts avoid nested copies, and a Linux group keeps the large kernel out of a flight-only checkout.
 * **Verified by**: `flight-isolation`
 * **Implementation Target**: `default.xml`
-* **Not implemented yet**: `inav/external/AbstractX` and `AbstractX/rtl/pio` break this today (`TODO.md`).
+* **Implemented** (2026-11-08): `inav/external/AbstractX` is removed (inav `6f2783d`); INAV takes AbstractX from this workspace through `ABSTRACTX_PATH`.
+* **Not implemented yet**: `AbstractX/rtl/pio` still breaks this (`TODO.md`).
 
 ### `[SPEC-FLIGHT-05]` One Owner per Block, No Copies
 * **Requirement**: each block has one owner, and every other project uses it from there:

@@ -20,7 +20,8 @@ The only task tracker for putting the repos together. Each repo keeps its own TO
 
 ## Cleaning up
 - [ ] `check_isolation.py`: find copied files; remove existing references; then fail the build.
-- [ ] Remove `inav/external/AbstractX` and `AbstractX/rtl/pio` ([SPEC-FLIGHT-04]). First save the local edits in `~/projects/quadcopter/inav/external/AbstractX`.
+- [x] Remove `inav/external/AbstractX` ([SPEC-FLIGHT-04]; inav `6f2783d`, 2026-11-08). The old checkout `~/projects/quadcopter/inav/external/AbstractX` was not touched; check it for local edits before deleting it.
+- [ ] Remove `AbstractX/rtl/pio` ([SPEC-FLIGHT-04]).
 - [ ] Retire `AbstractX/rtl` and its FPGA boards in favour of `abstractx-fpga` ([SPEC-FLIGHT-08]). A step of its own: AbstractX's specs, tests, rules and `rtl/pio` submodule refer to it. Ask the owner before deleting anything.
 - [ ] Fix the contradictions when that happens: [SPEC-ZYNQ-07] (100% PIO), `AbstractX/AGENTS.md` section 11 (no Wishbone; `abstractx-fpga` uses Wishbone).
 - [ ] One register map: `AbstractX/include/asp_tlp64.h` and `pcie_bar_map.hpp` list different DShot addresses from `abstractx-fpga`.
