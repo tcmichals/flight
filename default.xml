@@ -16,7 +16,7 @@
 
   <!-- Flight: the default checkout. -->
   <project name="inav" path="inav" upstream="master"
-           revision="2dbd23aa6f928dec94d29482c27dbf98b5fd953f"/>
+           revision="99d7e30b8c413623afd2e33ccb2285243acbbd35"/>
   <!-- No sync-s: it pulls MicroPython's submodules recursively (1.8 GB). CMakeLists.txt fetches what a build needs. -->
   <project name="AbstractX" path="AbstractX" upstream="main"
            revision="e8aef0211b3b886b7880c864f6bf1086b3ac0cd9"/>
