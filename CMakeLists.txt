@@ -1,4 +1,4 @@
-# Build glue only ([SPEC-FLIGHT-03]). The workspace root links here, so projects are subdirectories.
+# @impl [SPEC-FLIGHT-03] docs/SPECIFICATION.md: build glue only, no product code. The workspace root links here.
 cmake_minimum_required(VERSION 3.21)
 project(flight LANGUAGES C CXX ASM)
 

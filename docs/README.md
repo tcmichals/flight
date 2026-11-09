@@ -1,4 +1,5 @@
 # flight documentation
+<!-- @impl [SPEC-FLIGHT-07] docs/SPECIFICATION.md: docs here are about putting it together; links, no copies. -->
 
 This folder holds only what is about putting the system together ([SPEC-FLIGHT-07]). Everything else stays with its owner.
 Paths below are relative to the workspace root, and each project is at the commit `default.xml` pins.

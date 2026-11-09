@@ -2,6 +2,7 @@
 """Report project files that name a sibling repo by path or a home directory.
 
 @impl [SPEC-FLIGHT-01] docs/SPECIFICATION.md
+@impl [SPEC-FLIGHT-05] docs/SPECIFICATION.md: one owner per block, verify no sibling paths or copies.
 Report only for now: always exits 0. Usage: check_isolation.py <workspace> [--list]
 """
 import pathlib

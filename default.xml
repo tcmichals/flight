@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- @impl [SPEC-FLIGHT-02] docs/SPECIFICATION.md: the revisions below are the tested set. -->
 <!-- @impl [SPEC-FLIGHT-04] docs/SPECIFICATION.md: projects are tied together only by this file. -->
+<!-- @impl [SPEC-FLIGHT-08] docs/SPECIFICATION.md: abstractx-fpga is the single source for FPGA RTL; small boards carry no PIO tile. -->
 <manifest>
   <remote name="github-ssh" fetch="git@github.com:tcmichals/"/>
   <remote name="github" fetch="https://github.com/tcmichals/"/>
@@ -15,16 +16,16 @@
   </project>
 
   <!-- Flight: the default checkout. -->
-  <project name="inav" path="inav" upstream="master"
-           revision="6f2783d677b7e172169ce979c9d382b0696ed8cd"/>
+  <project name="inav" path="inav" upstream="flight-abstractx-path"
+           revision="a8985f74dc4ed66091db127dfeea9fdc85558be2"/>
   <!-- No sync-s: it pulls MicroPython's submodules recursively (1.8 GB). CMakeLists.txt fetches what a build needs. -->
-  <project name="AbstractX" path="AbstractX" upstream="main"
-           revision="e8aef0211b3b886b7880c864f6bf1086b3ac0cd9"/>
+  <project name="AbstractX" path="AbstractX" upstream="flight-integration"
+           revision="12e78006faa7aa75e1a50a5bdb313fe71e1c0023"/>
   <project name="abstractx-fpga" path="abstractx-fpga" upstream="main"
            revision="6dad65d19d86be7b3bebf32b80d3060dc734741b"/>
-  <!-- Same commit AbstractX pins at rtl/pio; the latest pio2 commit reports a failing test. -->
-  <project name="pio2" path="pio2" upstream="main"
-           revision="89fc1b6d489402231547dcca09ab94257de4eecc"/>
+  <!-- AbstractX rtl/pio commit with isolation fixes -->
+  <project name="pio2" path="pio2" upstream="flight-integration"
+           revision="b22af6e54c63e1a086411a19d9df3c243d62e0f4"/>
 
   <!-- Linux: only with repo init -g default,linux. cubie-a5e is the Buildroot out-of-tree (BR2_EXTERNAL). -->
   <project name="buildroot" path="buildroot" remote="buildroot-org" upstream="master"
