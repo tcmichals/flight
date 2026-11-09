@@ -66,7 +66,7 @@ The only task tracker for putting the repos together. Each repo keeps its own TO
 - [ ] Retire `AbstractX/rtl` and its FPGA boards in favour of `abstractx-fpga` ([SPEC-FLIGHT-08]). A step of its own: AbstractX's specs, tests, rules and `rtl/pio` submodule refer to it. Ask the owner before deleting anything.
 - [ ] Update `AbstractX/AGENTS.md` section 11 & docs: record that Wishbone is the internal FPGA peripheral interconnect driven by `asp_wishbone_master`, while external transports are Dual-SPI (Tang) and AXI (Zynq).
 - [x] One register map: aligned `AbstractX/include/pcie_bar_map.hpp` offsets with `abstractx-fpga/cores/*.json` (dshot `throttle0..3` at 16..28, `sys_regs`, `pwm_decoder`, `neopixel`).
-- [ ] Decide whether Zynq needs the PIO tile. Not measured here.
+- [x] Retain `pio2` for Zynq deployment: use the micro-programmable PIO tile in the Zynq-7020 Artix-7 PL (ample LUT capacity on XC7Z020 compared to Tang 9K/20K). Small boards (RP2350) use native hardware PIO.
 - [ ] Zynq boards: `AbstractX/hw/zynq7000/buildroot_external` and `QMTECH/zynq_qmtech_xc720`.
 - [ ] `tools/visualizer/flight_plugin.py` (AbstractX) and `inav/tools/studio_plugin`: example or duplicate?
 - [ ] Guide: how to build the flight controller, in `docs/`.
