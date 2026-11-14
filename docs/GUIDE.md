@@ -60,4 +60,4 @@ The same app on the real board, with a simulator behind some routes. What exists
 
 ## Other targets
 
-Not part of the first aircraft: A5E with Linux and the E906, FPGA IP through `abstractx-fpga` (the FPGA path, with no PIO tile on the Tang boards), ESP32-P4.
+Not part of the first aircraft: A5E and A7A with Linux, each with a Pico 2 as the motor and RC I/O companion ([SPEC-FLIGHT-11]; a Tang 9K/20K can replace it on the same link); FPGA IP through `abstractx-fpga` for the Tang and Zynq boards (no PIO tile on the Tang boards); ESP32-P4.

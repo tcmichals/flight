@@ -71,7 +71,8 @@
 
 ### `[SPEC-FLIGHT-08]` abstractx-fpga Is the FPGA Path; Small Boards Carry No PIO Tile
 * **Requirement**: `abstractx-fpga` is the single source of truth for FPGA RTL, IP blocks and their register maps.
-  * Transports differ by target: Tang Nano 9K/20K (and SBC companion) uses 5-wire Dual-SPI (`asp_spi_frontend`); QMTECH Zynq-7020 uses AXI4-Lite (`asp_axi_lite_bridge`).
+  * Transports differ by target: Tang Nano 9K/20K uses 5-wire Dual-SPI (`asp_spi_frontend`); QMTECH Zynq-7020 uses AXI4-Lite (`asp_axi_lite_bridge`).
+  * The SBC boards (Cubie A5E, Cubie A7A) use a Pico 2 as their I/O companion first; a Tang board on the same link stays an option ([SPEC-FLIGHT-11]).
   * Both transports unpack into standard 64-byte TLPs over internal AXI-Stream into `asp_router`, driving `asp_wishbone_master` to access custom IP sockets (sys_regs, IMU DMA, DShot, PWM, UART, NeoPixel).
   * Small boards carry no PIO tile. On the RP2350, DShot and RC use `pio2` programs on the chip's own PIO. `inav` issues the same TLPs either way.
 * **Why**: owner's decision, 2026-11-07, confirmed 2026-11-08. Measured in `abstractx-fpga` [SPEC-FAB-02]: the whole custom design is 3,202 logic cells on the 9K; a PIO tile alone is 11,436 at 8 pins (does not fit the 9K) and 13,071 at 16 pins on the 20K.
@@ -90,15 +91,15 @@
        - Runs freestanding C++20 bare-metal I/O firmware (`inav_e906_app.elf`, RV32IMAFC, 0 B dynamic heap).
        - Direct hardware bus mastering: SPI1 (ICM-42688-P IMU at 1 kHz burst / 8 kHz rate), TWI1 (compass at 100 Hz), UART3 (u-blox NEO-M8N GPS at 115200 baud).
        - Inter-core communication: VirtIO RPMsg `/dev/rpmsg0` exchanging fixed 64-byte `Tlp64` datagrams with sub-microsecond latency.
-    3. **Companion Gowin FPGA (Tang Nano 20K / Primer 20K)**:
-       - Connected to Cubie A5E 40-pin header via 5-wire Dual-SPI link (`[SPEC-A5E-LINK-01]`: SCLK, CS_N, IO0, IO1, and INT_REQ doorbell).
-       - Hardware acceleration for 4x-8x DShot600 ESC motor outputs, PWM servo channels, optical flow pulse accumulation, and Neopixel status indicators.
+    3. **Companion Pico 2 (RP2350)** ([SPEC-FLIGHT-11]; replaced the Gowin FPGA companion on 2026-11-13):
+       - Connected to the Cubie A5E 40-pin header; the link is set by [SPEC-FLIGHT-11].
+       - DShot, ESC serial passthrough, NeoPixel and 6-channel RC PWM decode on the RP2350's own PIO, using `pio2` programs.
   * **Build & Distribution Plan**:
     - Kernel: Linux 6.6-LTS PREEMPT_RT (`linux-cubie`, branch `cubie-linux-7.1`).
     - Userspace: Minimal Buildroot rootfs (`cubie-a5e/project-cubie-a5e`), compiling `inav_linux_sbc` via CMake out-of-tree (`BR2_EXTERNAL`).
     - E906 Firmware: Compiled with `riscv64-unknown-elf-gcc -march=rv32imafc -mabi=ilp32f`.
 * **Why**: Eliminates Linux OS scheduling jitter from critical kHz I/O loops; achieves deterministic microsecond motor/sensor timing while providing Linux networking, Wi-Fi 6, USB telemetry, and high-compute navigation.
-* **Verified by**: `flight-spectrace`
+* **Verified by**: `spec-change-review`
 * **Implementation Target**: `inav/docs/ARCHITECTURE.md`, `AbstractX/docs/tier3_targets/bsp/E906_COPROCESSOR_ARCHITECTURE.md`
 
 ### `[SPEC-FLIGHT-10]` Interactive SITL Stick Flight Simulation
@@ -108,5 +109,38 @@
   * **Arming & Mode Control**: Dedicated ARM/DISARM switch (AUX1 / Channel 5) and Flight Mode switch (AUX2 / Channel 6: Angle, Acro, RTH).
   * **6-DOF Closed-Loop Response**: SITL physics and EKF3 respond in real time to throttle and stick demands, driving 3D vector model animation, EFIS Primary Flight Display (PFD) speed/altitude tapes, and simulated motor outputs.
 * **Why**: Allows proving the entire flight stack end-to-end (sensor parsing, EKF3, PID control, QuadX mixer, physics simulation, telemetry, and ground control UI) without cutting silicon, wiring boards, or risking physical airframes.
-* **Verified by**: `flight-spectrace`, `SitlLinkPluginTest`
+* **Verified by**: `host-tests` (`SitlLinkPluginTest` in `inav`)
 * **Implementation Target**: `inav/src/target/sitl/sitl_main.cpp`, `inav/tools/studio_plugin/inav_plugin.py`
+
+### `[SPEC-FLIGHT-11]` The SBC I/O Companion Is a Pico 2 First
+* **Requirement**: on the Radxa Cubie A5E ([SPEC-FLIGHT-09]) and Cubie A7A, the motor and RC I/O companion is a Pico 2 or Pico 2 W (RP2350). Wi-Fi is not used.
+  * It does four jobs, on the RP2350's own PIO from `pio2` programs, as on the Pico flight target ([SPEC-FLIGHT-08]):
+    1. DShot motor outputs.
+    2. ESC serial passthrough on the same motor pins, for ESC configuration and firmware update; only while disarmed.
+    3. NeoPixel status LEDs.
+    4. Six channels of RC receiver PWM decode.
+  * The link is the 5-wire Dual-SPI link with the `INT_REQ` doorbell (SCLK, CS_N, IO0, IO1, INT_REQ), with the RP2350 as SPI target on PIO.
+  * The SBC sends the same 64-byte TLPs it would send an FPGA, so `inav` code above the transport does not change.
+  * The companion firmware is its own project, `abstractx-pico2-offload`, built on AbstractX's RP2350 target (`AbstractX/targets/pico2w_rp2350`) and `pio2` programs. Working Pico code in `rt-fc-offloader` (ESC passthrough, 4-way, MSP) moves there; it is not copied ([SPEC-FLIGHT-05]).
+  * Link behaviour agreed 2026-11-13, to move to the link's owner once one is named:
+    1. A combined exchange: command byte, 64-byte request TLP (host drives), 2 dummy bytes clocked one bit at a time with IO0 and IO1 released, then a 64-byte reply TLP (companion drives).
+    2. The reply is staged by DMA before CS falls: the answer to an earlier request, or the latest snapshot (RC PWM values, status). No CPU work happens inside a transaction.
+    3. During the command byte the companion drives a status byte on IO1: replies queued and flags (serial data, reply ready, fault).
+    4. `INT_REQ` is a level, high while anything is queued. It is not raised for each PWM edge; the flight loop reads PWM from every reply.
+    5. TLP channels separate registers, serial and events; tags match replies to requests.
+    6. ESC serial is buffered both ways; the status reports bytes waiting and free space.
+    7. The companion stops the motors (DShot 0) and refuses passthrough when no exchange with a good CRC arrives within a timeout.
+  * A Tang Nano 9K or 20K running `abstractx-fpga` stays a supported companion behind the same link and TLPs; it is not the first one built.
+* **Why**: owner's decision, 2026-11-13: faster to start and cheaper. The RP2350 runs `pio2` programs natively, so there is no synthesis step, and the board is already on the bench (a Pico 2 W, the same one used for IMU testing).
+* **Verified by**: `spec-change-review`
+* **Implementation Target**: `default.xml` (once `abstractx-pico2-offload` exists)
+* **Not implemented yet**: `abstractx-pico2-offload` does not exist. The link has no owner (AbstractX's `TLP_BUS_SPECIFICATION.md` is the likely one). `abstractx-fpga`'s `asp_spi_frontend` has no exchange command, no dummy bytes and no IO1 status. The link watchdog timeout is not chosen. `inav/docs/ARCHITECTURE.md` still describes a Gowin companion. Nothing has run on hardware.
+
+### `[SPEC-FLIGHT-12]` Every Project Follows AbstractX's SpecTrace
+* **Requirement**: every project in `default.xml` that holds our code follows AbstractX's SpecTrace, run from the `AbstractX/` checkout with `--root <project>`:
+  requirements in `*SPECIFICATION.md` with `Verified by` lines naming real skills, `@impl` and `@verifies` tags, and an `engineering_log.md` with AbstractX's categories.
+  Upstream checkouts (`buildroot`) are exempt. A new project starts this way on its first commit.
+* **Why**: owner's decision, 2026-11-13. One process across the repos, so evidence and lessons are found in the same place in each.
+* **Verified by**: `spec-change-review`
+* **Implementation Target**: `CMakeLists.txt`
+* **Not implemented yet**: no workspace target runs the SpecTrace checks with `--root` for each project. `inav` has no SpecTrace tags or checks (`TODO.md`). Projects other than `flight` and `AbstractX` have not been checked against this.

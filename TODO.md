@@ -26,7 +26,7 @@ The only task tracker for putting the repos together. Each repo keeps its own TO
   - [ ] Delete `inav/src/abstractx_engine/coroutine_task.hpp`.
 - [ ] Check whether `asp_coro.hpp`'s TLP awaiters can sit under `inav`'s `TlpChannel`. Change AbstractX only if its API lacks something.
 - [ ] Compare `inav/src/target/linux_common` and its Pico code with `AbstractX/targets`; remove what duplicates them, keep routing.
-- [ ] Decide SpecTrace in `inav`: tags, `Verified by`, checks with `--root inav`.
+- [ ] Put `inav` on SpecTrace ([SPEC-FLIGHT-12], decided 2026-11-13): tags, `Verified by`, checks with `--root inav`, `engineering_log.md` in AbstractX's format.
 - [ ] Fix `inav`'s docs: addresses in `ARCHITECTURE.md` differ from its code; 8 kHz vs the 1 kHz decision; "100% COMPLETE" claims.
 
 ## Builds & Platforms
@@ -37,13 +37,33 @@ The only task tracker for putting the repos together. Each repo keeps its own TO
   - [ ] Buildroot out-of-tree (`BR2_EXTERNAL=cubie-a5e/project-cubie-a5e`, `LINUX_OVERRIDE_SRCDIR=linux-cubie`): generate AArch64 rootfs and toolchain.
   - [ ] Real-time co-processor firmware (XuanTie E906 RISC-V @ 200–400 MHz): build `inav_e906_app.elf` / `gps_imu_app` for RemoteProc deployment (`/lib/firmware/`), handling SPI1 IMU DMA, UART3 GPS, and I2C compass over shared SRAM (`0x40000000`).
   - [ ] Host flight binary: cross-compile `inav_linux_sbc` for AArch64 to run on isolated Core 3 under `SCHED_FIFO` 99 + `mlockall`.
-  - [ ] Companion Gowin FPGA (Tang Nano 20K / Primer 20K): connect via 5-wire Dual-SPI + `INT_REQ` GPIO doorbell for DShot150-1200 + CRSF RX + WS2812.
+  - [ ] Companion Pico 2 / Pico 2 W, Wi-Fi off ([SPEC-FLIGHT-11]; Tang Nano 9K/20K stays an alternative), on native PIO with `pio2` programs:
+    - [ ] 5-wire Dual-SPI target on PIO with `INT_REQ` doorbell, decoding 64-byte TLPs.
+    - [ ] DShot motor outputs.
+    - [ ] ESC serial passthrough on the motor pins (configuration and firmware update), disarmed only.
+    - [ ] NeoPixel.
+    - [ ] 6-channel RC PWM decode.
+    - [ ] PIO state-machine budget for all of the above on the RP2350's 12 state machines.
 - [ ] A7A kernel: it is on another branch (`a7a_remoteproc_camera_usb`). Decide how to build it.
+- [ ] A7A I/O companion: Pico 2, same as A5E ([SPEC-FLIGHT-11]).
+- [ ] Update `inav/docs/ARCHITECTURE.md` and `AbstractX/docs/tier3_targets/bsp/E906_COPROCESSOR_ARCHITECTURE.md`: the A5E companion is a Pico 2, not a Gowin FPGA.
 - [ ] ESP32-P4 and HITL: check what exists.
 - [ ] Connect AbstractX C++ TLP transport to `abstractx-fpga` Verilator simulation:
   - Architecture clarified: Two edge transports depending on deployment target (Tang FPGA is 5-wire Dual-SPI; QMTECH Zynq-7020 is AXI4-Lite). Both unpack to 64-byte TLPs over internal AXI-Stream into `asp_router`, driving `asp_wishbone_master` for peripheral IP blocks.
   - [x] Verified in `abstractx-fpga` pytest suite under Verilator (17/17 tests pass for both `spi_fabric` and `axi_fabric`).
   - [ ] Connect AbstractX C++ TLP client over socket/shm to Verilator simulation.
+
+## Pico 2 I/O Companion (`[SPEC-FLIGHT-11]`)
+- [ ] Create `tcmichals/abstractx-pico2-offload` (public). First commit: `AGENTS.md`, `docs/SPECIFICATION.md`, `engineering_log.md`, licence, on SpecTrace ([SPEC-FLIGHT-12]).
+- [ ] Add it to `default.xml`, the [SPEC-FLIGHT-05] owner table, `README.md` and `tools/check_isolation.py`.
+- [ ] Move ESC passthrough, 4-way and MSP from `rt-fc-offloader/firmware` into it; mark `rt-fc-offloader`'s Pico path retired.
+- [ ] Compare `rt-fc-offloader`'s `dshot.pio` and `esc_pio_uart.pio` (run on hardware) with `pio2`'s `dshot_bidir.pio` and `esc_serial.pio`; keep one copy, in `pio2`.
+- [ ] Add NeoPixel and 6-channel PWM-decode programs to `pio2`.
+- [ ] Name the link's owner and move the link behaviour in [SPEC-FLIGHT-11] there.
+- [ ] `abstractx-fpga` `asp_spi_frontend`: add the exchange command, 2 dummy bytes and IO1 status, so a Tang stays interchangeable. Check whether it drives IO0 on the clock right after the command byte (possible contention).
+- [ ] Check that the A527 SPI controller and `spi-sun6i` do dual mode and capture IO1 during the single-bit phase.
+- [ ] Bench: Pico 2 W SPI target, CRC-error sweep over SCLK, scope the turnaround; record in the evidence ledger.
+- [ ] Choose the link watchdog timeout.
 
 ## SITL Simulation & Studio Visualizer (`[SPEC-SITL-07]`, `[SPEC-FLIGHT-10]`)
 - [x] Flight testing with interactive transmitter sticks in AbstractX Studio (`inav_plugin.py`):
@@ -70,4 +90,6 @@ The only task tracker for putting the repos together. Each repo keeps its own TO
 - [ ] Zynq boards: `AbstractX/hw/zynq7000/buildroot_external` and `QMTECH/zynq_qmtech_xc720`.
 - [ ] `tools/visualizer/flight_plugin.py` (AbstractX) and `inav/tools/studio_plugin`: example or duplicate?
 - [ ] Guide: how to build the flight controller, in `docs/`.
-- [ ] SpecTrace verification matrix: link evidence ledger and `@verifies` annotations for `[SPEC-FLIGHT-01]` through `[SPEC-FLIGHT-08]`.
+- [ ] SpecTrace verification matrix: link evidence ledger and `@verifies` annotations for `[SPEC-FLIGHT-01]` through `[SPEC-FLIGHT-12]`.
+- [ ] `flight-spectrace` should fail when the matrix shows a BROKEN requirement; today no `spectrace_matrix.py` flag does that without also failing on every unverified one (`engineering_log.md`, 2026-11-13).
+- [ ] Add a workspace target that runs the SpecTrace checks with `--root` for each project ([SPEC-FLIGHT-12]).

@@ -12,6 +12,7 @@ Each project has its own `AGENTS.md` or `CLAUDE.md`: follow it when working in t
 - Only this repo knows the other repos exist ([SPEC-FLIGHT-01]). Never add a sibling path to a project.
 - Move a pin only with evidence in the commit message ([SPEC-FLIGHT-02]).
 - No product code here ([SPEC-FLIGHT-03]). One owner per block, no copies ([SPEC-FLIGHT-05]).
+- Every project in the workspace follows AbstractX's SpecTrace ([SPEC-FLIGHT-12]): `inav`, `pio2`, `abstractx-fpga`, `cubie-a5e`, `abstractx-pico2-offload` and any new one. In any of them: spec first, `Verified by` names a real skill, tags in code and tests, lessons in its `engineering_log.md`. A new repo starts with `AGENTS.md`, `docs/SPECIFICATION.md` and `engineering_log.md` on its first commit.
 - Spec first. Tag code with `@impl [SPEC-*] <spec file>` and tests with `@verifies`. Run `cmake --build build/sitl --target flight-spectrace` from the workspace root.
 - Skills in `.agents/skills/` are links to AbstractX's ([SPEC-FLIGHT-06]). Their commands run from the `AbstractX/` checkout.
 - Lessons go in `engineering_log.md` with a category: `product-bug`, `tool-bug`, `false-alarm`, `process-gap` or `hardware-fact`.

@@ -48,3 +48,16 @@
 * **Decision**: `abstractx-fpga` is the FPGA path ([SPEC-FLIGHT-08]).
 * **Which check should have caught it**: none exists across repos. The copy check in `TODO.md` is meant to.
 
+## 2026-11-13: flight-spectrace passed with two broken requirements
+
+* **Category**: `process-gap`
+* **What was missed**: [SPEC-FLIGHT-09] and [SPEC-FLIGHT-10] named `flight-spectrace` in `Verified by`. That is a CMake target, not a skill, so `spectrace_matrix.py --matrix` showed both as BROKEN. `cmake --build build/sitl --target flight-spectrace` still passed: it runs `--check-skills`, `--check-drift` and `--check-verifies`, and none of them looks at `Verified by` names.
+* **Which check should have caught it**: `flight-spectrace`. No `spectrace_matrix.py` option fails on BROKEN alone; `--require-complete` also fails on every requirement not yet verified.
+* **Fix**: `Verified by` now names `spec-change-review` and `host-tests`. The matrix went from 2 BROKEN to 0 on the same tool. A check that fails on BROKEN belongs in AbstractX (`TODO.md`).
+
+## 2026-11-13: Working Pico code lives outside the manifest
+
+* **Category**: `process-gap`
+* **What was missed**: `rt-fc-offloader` holds Pico firmware that ran with one ESC and motor (DShot, ESC passthrough on the motor pin, 4-way, MSP), and its own `dshot.pio` and `esc_pio_uart.pio`. `pio2` holds `dshot_bidir.pio` and `esc_serial.pio`. Neither copy names the other, and the Pico companion ([SPEC-FLIGHT-11]) nearly started from scratch.
+* **Which check should have caught it**: `flight-isolation` looks only at projects in `default.xml`, and `rt-fc-offloader` is not one. No check looks for copies yet ([SPEC-FLIGHT-05]).
+* **Fix**: `TODO.md` moves the code into `abstractx-pico2-offload` and keeps one copy of each PIO program in `pio2`.
