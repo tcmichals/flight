@@ -13,6 +13,7 @@
 * **Requirement**: `default.xml` pins every project to a commit, never a branch, and the commit must be on
   its remote. The one exception is this repo, which holds the pins and follows `main`. Move a pin only after the builds and
   tests for that change pass, and record the command and its result in the commit message.
+  AbstractX is pinned to a commit on its `main` (it is generic code; nothing for flight lives on a side branch of it).
 * **Why**: no single repo can show that its version works with the others.
 * **Verified by**: `flight-isolation`
 * **Implementation Target**: `default.xml`
@@ -20,6 +21,8 @@
 ### `[SPEC-FLIGHT-03]` No Product Code Here
 * **Requirement**: this repo holds the manifest, build glue, cross-repo tests and the guide. The Buildroot
   out-of-tree stays in `cubie-a5e/project-cubie-a5e`. `CMakeLists.txt` adds the projects as subdirectories, one CMake preset per target; the workspace root links to it.
+  When two projects clash at build time, the glue sets the other project's generic switch (for INAV, which keeps
+  its own `abstractx::Task` engine: `ABSTRACTX_NO_TASK_ALIASES`, AbstractX `[SPEC-ARCH-17]`); no project tests another's names.
 * **Why**: otherwise this becomes one more place where the same thing lives.
 * **Verified by**: `spec-change-review`
 * **Implementation Target**: `CMakeLists.txt`

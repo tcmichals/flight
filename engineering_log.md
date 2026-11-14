@@ -68,3 +68,11 @@
 * **What**: the owner reports the Cubie A5E's T527 gets very hot; a heat sink is being worked out, and a Cubie A7Z is to be tried as the SBC target ([SPEC-FLIGHT-09]).
 * **Not measured**: no temperature, load or ambient recorded yet (`TODO.md`).
 
+
+## 2026-11-14: AbstractX was pinned on a side branch with a client name in it
+
+* **Category**: `process-gap`
+* **What was missed**: the AbstractX pin was `12e7800` on `flight-integration`, which had drifted from `main` (1 commit not on `main`, 15 on `main` not on it). That one commit made `coro.hpp` test INAV's include guard `COROUTINE_TASK_HPP`: INAV's name in generic code, and it worked only when INAV's header came first. Without it, SITL failed against `main` (`abstractx::coro::Task conflicts with a previous declaration`).
+* **Which check should have caught it**: none. `flight-isolation` checks that pins are commits on the remote, not which branch they come from or whether a project names another inside its code.
+* **Fix**: AbstractX `c1c63a3` adds a generic switch, `ABSTRACTX_NO_TASK_ALIASES` ([SPEC-ARCH-17]); `CMakeLists.txt` sets it for INAV ([SPEC-FLIGHT-03]); the pin moves to AbstractX `main` ([SPEC-FLIGHT-02]). The register-map half of `12e7800` (`include/pcie_bar_map.hpp`, aligned with abstractx-fpga's cores) was not taken: nothing uses it, and its `PwmBase` 0x40000300 equals `BaroBase`. It stays on `flight-integration` for the owner to decide (`TODO.md`).
+* **Not checked**: no check yet that the AbstractX pin is on `main`.

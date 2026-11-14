@@ -91,11 +91,12 @@ The only task tracker for putting the repos together. Each repo keeps its own TO
 - [ ] Remove `AbstractX/rtl/pio` ([SPEC-FLIGHT-04]).
 - [ ] Retire `AbstractX/rtl` and its FPGA boards in favour of `abstractx-fpga` ([SPEC-FLIGHT-08]). A step of its own: AbstractX's specs, tests, rules and `rtl/pio` submodule refer to it. Ask the owner before deleting anything.
 - [ ] Update `AbstractX/AGENTS.md` section 11 & docs: record that Wishbone is the internal FPGA peripheral interconnect driven by `asp_wishbone_master`, while external transports are Dual-SPI (Tang) and AXI (Zynq).
-- [x] One register map: aligned `AbstractX/include/pcie_bar_map.hpp` offsets with `abstractx-fpga/cores/*.json` (dshot `throttle0..3` at 16..28, `sys_regs`, `pwm_decoder`, `neopixel`).
+- [ ] One register map: align `AbstractX/include/pcie_bar_map.hpp` offsets with `abstractx-fpga/cores/*.json` (dshot `throttle0..3` at 16..28, `sys_regs`, `pwm_decoder`, `neopixel`). Done once in AbstractX `12e7800` on `flight-integration`, not on `main`, so not in the pin since 2026-11-14. Owner to decide: take it to AbstractX `main` (its `PwmBase` 0x40000300 equals `BaroBase`), and delete `flight-integration` after.
 - [x] Retain `pio2` for Zynq deployment: use the micro-programmable PIO tile in the Zynq-7020 Artix-7 PL (ample LUT capacity on XC7Z020 compared to Tang 9K/20K). Small boards (RP2350) use native hardware PIO.
 - [ ] Zynq boards: `AbstractX/hw/zynq7000/buildroot_external` and `QMTECH/zynq_qmtech_xc720`.
 - [ ] `tools/visualizer/flight_plugin.py` (AbstractX) and `inav/tools/studio_plugin`: example or duplicate?
 - [ ] Guide: how to build the flight controller, in `docs/`.
 - [ ] SpecTrace verification matrix: link evidence ledger and `@verifies` annotations for `[SPEC-FLIGHT-01]` through `[SPEC-FLIGHT-12]`.
+- [ ] `flight-isolation` should check that the AbstractX pin is a commit on AbstractX `main` ([SPEC-FLIGHT-02], `engineering_log.md` 2026-11-14).
 - [ ] `flight-spectrace` should fail when the matrix shows a BROKEN requirement; today no `spectrace_matrix.py` flag does that without also failing on every unverified one (`engineering_log.md`, 2026-11-13).
 - [ ] Add a workspace target that runs the SpecTrace checks with `--root` for each project ([SPEC-FLIGHT-12]).

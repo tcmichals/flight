@@ -16,6 +16,10 @@ if(NOT EXISTS "${ABSTRACTX_PATH}/third_party/etl/include/etl/memory_model.h")
 endif()
 
 add_subdirectory(AbstractX)
+
+# @impl [SPEC-FLIGHT-03] docs/SPECIFICATION.md: inav keeps its own abstractx::Task engine
+# (abstractx_engine/coroutine_task.hpp), so it turns off AbstractX's Task aliases ([SPEC-ARCH-17]).
+add_compile_definitions(ABSTRACTX_NO_TASK_ALIASES)
 add_subdirectory(inav)
 
 # @impl [SPEC-FLIGHT-06] docs/SPECIFICATION.md: AbstractX's tools, run from its checkout with --root, not copied.
