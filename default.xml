@@ -20,7 +20,7 @@
            revision="a8985f74dc4ed66091db127dfeea9fdc85558be2"/>
   <!-- No sync-s: it pulls MicroPython's submodules recursively (1.8 GB). CMakeLists.txt fetches what a build needs. -->
   <project name="AbstractX" path="AbstractX" upstream="main"
-           revision="001cef1b39379174d01d708fb5ce9ddcc3c121b7"/>
+           revision="53f243a09ecfb9ffec6ce23aad375afc300348e2"/>
   <project name="abstractx-fpga" path="abstractx-fpga" upstream="main"
            revision="6dad65d19d86be7b3bebf32b80d3060dc734741b"/>
   <!-- AbstractX rtl/pio commit with isolation fixes -->
