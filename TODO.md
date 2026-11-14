@@ -62,6 +62,7 @@ The only task tracker for putting the repos together. Each repo keeps its own TO
 ## Pico 2 I/O Companion (`[SPEC-FLIGHT-11]`)
 - [x] Create `tcmichals/abstractx-pico2-offload` (public), first commit `722cc58`: spec `[SPEC-OFFLOAD-01..06]`, `AGENTS.md`, `engineering_log.md`, skills, GPL-3.0-or-later; SpecTrace checks clean.
 - [ ] Add it to `default.xml`, the [SPEC-FLIGHT-05] owner table, `README.md` and `tools/check_isolation.py`.
+- [ ] `abstractx-pico2-offload`: link AbstractX's Pico target with Wi-Fi off (`ABSTRACTX_PICO_WIFI=OFF`, presets `pico2w-nowifi` / `pico2`, AbstractX `001cef1` [SPEC-PICO-CFG-01]) instead of `abstractx_core` alone, and drop its `EXCLUDE_FROM_ALL` workaround.
 - [ ] Move ESC passthrough, 4-way and MSP from `rt-fc-offloader/firmware` into it; mark `rt-fc-offloader`'s Pico path retired.
 - [ ] Compare `rt-fc-offloader`'s `dshot.pio` and `esc_pio_uart.pio` (run on hardware) with `pio2`'s `dshot_bidir.pio` and `esc_serial.pio`; keep one copy, in `pio2`.
 - [ ] Add NeoPixel and 6-channel PWM-decode programs to `pio2`.
