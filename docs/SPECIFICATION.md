@@ -83,6 +83,7 @@
 ### `[SPEC-FLIGHT-09]` Radxa Cubie A5E Heterogeneous Compute Architecture
 * **Requirement**: The Radxa Cubie A5E (Allwinner A527/T527 octa-core Cortex-A55 + XuanTie E906 RISC-V co-processor) is the primary SBC flight platform.
   * **Under evaluation (2026-11-13)**: a Cubie A7Z is to be tried as the SBC target, because the A5E's T527 runs too hot; a heat sink for the A5E is being worked out. Until decided, the A5E text below stands.
+  * **Under evaluation (2026-11-13)**: a Raspberry Pi Zero 2 W as the SBC. It has no co-processor: Linux on the Pi reads the IMU (SPI), I2C and serial and runs the flight code, and also encodes video to the SD card. The Pico 2 companion ([SPEC-FLIGHT-11]) does DShot, LEDs and RC decode. Precedent (owner): ArduPilot ran on a Pi Zero with the PXFmini.
   * **Compute Partitioning**:
     1. **PREEMPT_RT Linux Host (Cortex-A55)**:
        - Runs `inav_linux_sbc` on isolated CPU core 3 (`isolcpus=3 nohz_full=3 rcu_nocbs=3`, `SCHED_FIFO 99` + `mlockall`).
@@ -114,13 +115,13 @@
 * **Implementation Target**: `inav/src/target/sitl/sitl_main.cpp`, `inav/tools/studio_plugin/inav_plugin.py`
 
 ### `[SPEC-FLIGHT-11]` The SBC I/O Companion Is a Pico 2 First
-* **Requirement**: on the Radxa Cubie A5E ([SPEC-FLIGHT-09]), Cubie A7A and Cubie A7Z, the motor and RC I/O companion is a Pico 2 or Pico 2 W (RP2350). Wi-Fi is not used.
+* **Requirement**: on the Radxa Cubie A5E ([SPEC-FLIGHT-09]), Cubie A7A, Cubie A7Z and Raspberry Pi Zero 2 W, the motor and RC I/O companion is a Pico 2 or Pico 2 W (RP2350). Wi-Fi is not used.
   * It does four jobs, on the RP2350's own PIO from `pio2` programs, as on the Pico flight target ([SPEC-FLIGHT-08]):
     1. DShot motor outputs.
     2. ESC serial passthrough on the same motor pins, for ESC configuration and firmware update; only while disarmed.
     3. NeoPixel status LEDs.
     4. Six channels of RC receiver PWM decode.
-  * The link is the 5-wire Dual-SPI link with the `INT_REQ` doorbell (SCLK, CS_N, IO0, IO1, INT_REQ), with the RP2350 as SPI target on PIO.
+  * The link is the 5-wire Dual-SPI link with the `INT_REQ` doorbell (SCLK, CS_N, IO0, IO1, INT_REQ), with the RP2350 as SPI target on PIO. From a Pi Zero 2 W it is plain SPI (MOSI, MISO, one bit per clock) with the same wires, exchange and `INT_REQ` (owner, 2026-11-13).
   * The SBC sends the same 64-byte TLPs it would send an FPGA, so `inav` code above the transport does not change.
   * The companion firmware is its own project, `abstractx-pico2-offload`, built on AbstractX's RP2350 target (`AbstractX/targets/pico2w_rp2350`) and `pio2` programs. Working Pico code in `rt-fc-offloader` (ESC passthrough, 4-way, MSP) moves there; it is not copied ([SPEC-FLIGHT-05]).
   * Link behaviour agreed 2026-11-13, to move to the link's owner once one is named:

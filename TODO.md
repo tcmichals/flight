@@ -47,6 +47,10 @@ The only task tracker for putting the repos together. Each repo keeps its own TO
     - [ ] PIO state-machine budget for all of the above on the RP2350's 12 state machines.
 - [ ] A7A kernel: it is on another branch (`a7a_remoteproc_camera_usb`). Decide how to build it.
 - [ ] A7A I/O companion: Pico 2, same as A5E ([SPEC-FLIGHT-11]).
+- [ ] Pi Zero 2 W as the SBC ([SPEC-FLIGHT-09], 2026-11-13):
+  - [ ] Check that `spi-bcm2835` has no dual mode (plain SPI to the Pico is decided either way); IMU and Pico link on separate SPI buses.
+  - [ ] Video encoding to the SD card next to a 1 kHz loop: hardware encoder, on cores other than the flight core; measure loop jitter and SD write latency with recording on and off.
+  - [ ] GPS on the PL011 UART (Bluetooth off); temperatures under flight load with recording.
 - [ ] Try the Cubie A7Z as the SBC target ([SPEC-FLIGHT-09], 2026-11-13): the A5E's T527 runs too hot. Record board temperatures (idle, under the flight load) for both, with and without a heat sink, in `engineering_log.md`.
 - [ ] Update `inav/docs/ARCHITECTURE.md` and `AbstractX/docs/tier3_targets/bsp/E906_COPROCESSOR_ARCHITECTURE.md`: the A5E companion is a Pico 2, not a Gowin FPGA.
 - [ ] ESP32-P4 and HITL: check what exists.
