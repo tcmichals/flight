@@ -82,6 +82,7 @@
 
 ### `[SPEC-FLIGHT-09]` Radxa Cubie A5E Heterogeneous Compute Architecture
 * **Requirement**: The Radxa Cubie A5E (Allwinner A527/T527 octa-core Cortex-A55 + XuanTie E906 RISC-V co-processor) is the primary SBC flight platform.
+  * **Under evaluation (2026-11-13)**: a Cubie A7Z is to be tried as the SBC target, because the A5E's T527 runs too hot; a heat sink for the A5E is being worked out. Until decided, the A5E text below stands.
   * **Compute Partitioning**:
     1. **PREEMPT_RT Linux Host (Cortex-A55)**:
        - Runs `inav_linux_sbc` on isolated CPU core 3 (`isolcpus=3 nohz_full=3 rcu_nocbs=3`, `SCHED_FIFO 99` + `mlockall`).
@@ -113,7 +114,7 @@
 * **Implementation Target**: `inav/src/target/sitl/sitl_main.cpp`, `inav/tools/studio_plugin/inav_plugin.py`
 
 ### `[SPEC-FLIGHT-11]` The SBC I/O Companion Is a Pico 2 First
-* **Requirement**: on the Radxa Cubie A5E ([SPEC-FLIGHT-09]) and Cubie A7A, the motor and RC I/O companion is a Pico 2 or Pico 2 W (RP2350). Wi-Fi is not used.
+* **Requirement**: on the Radxa Cubie A5E ([SPEC-FLIGHT-09]), Cubie A7A and Cubie A7Z, the motor and RC I/O companion is a Pico 2 or Pico 2 W (RP2350). Wi-Fi is not used.
   * It does four jobs, on the RP2350's own PIO from `pio2` programs, as on the Pico flight target ([SPEC-FLIGHT-08]):
     1. DShot motor outputs.
     2. ESC serial passthrough on the same motor pins, for ESC configuration and firmware update; only while disarmed.

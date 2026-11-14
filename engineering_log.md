@@ -61,3 +61,10 @@
 * **What was missed**: `rt-fc-offloader` holds Pico firmware that ran with one ESC and motor (DShot, ESC passthrough on the motor pin, 4-way, MSP), and its own `dshot.pio` and `esc_pio_uart.pio`. `pio2` holds `dshot_bidir.pio` and `esc_serial.pio`. Neither copy names the other, and the Pico companion ([SPEC-FLIGHT-11]) nearly started from scratch.
 * **Which check should have caught it**: `flight-isolation` looks only at projects in `default.xml`, and `rt-fc-offloader` is not one. No check looks for copies yet ([SPEC-FLIGHT-05]).
 * **Fix**: `TODO.md` moves the code into `abstractx-pico2-offload` and keeps one copy of each PIO program in `pio2`.
+
+## 2026-11-13: The A5E's T527 runs too hot
+
+* **Category**: `hardware-fact`
+* **What**: the owner reports the Cubie A5E's T527 gets very hot; a heat sink is being worked out, and a Cubie A7Z is to be tried as the SBC target ([SPEC-FLIGHT-09]).
+* **Not measured**: no temperature, load or ambient recorded yet (`TODO.md`).
+
