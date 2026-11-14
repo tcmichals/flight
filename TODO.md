@@ -26,7 +26,8 @@ The only task tracker for putting the repos together. Each repo keeps its own TO
   - [ ] Delete `inav/src/abstractx_engine/coroutine_task.hpp`.
 - [ ] Check whether `asp_coro.hpp`'s TLP awaiters can sit under `inav`'s `TlpChannel`. Change AbstractX only if its API lacks something.
 - [ ] Compare `inav/src/target/linux_common` and its Pico code with `AbstractX/targets`; remove what duplicates them, keep routing.
-- [ ] Put `inav` on SpecTrace ([SPEC-FLIGHT-12], decided 2026-11-13): tags, `Verified by`, checks with `--root inav`, `engineering_log.md` in AbstractX's format.
+- [ ] `pio2` on SpecTrace: drift in 23 requirements (paths to code not yet written, e.g. `tests/uvm/`, `tools/hil/`); 2 unbacked `@verifies` (`tests/test_host_frame.py`, `tests/test_trace_ctf.py`).
+- [ ] `abstractx-fpga` on SpecTrace: 2 BROKEN (`[SPEC-TN20K-01]`, `[SPEC-TN20K-02]` name `fpga-build`, no such skill); drift in `[SPEC-ZYNQ-07]` (`rtl/pio/`, `asp_pio_wrap.sv`); 3 unbacked `@verifies` (`[SPEC-FPGA-CLK-01]`).
 - [ ] Fix `inav`'s docs: addresses in `ARCHITECTURE.md` differ from its code; 8 kHz vs the 1 kHz decision; "100% COMPLETE" claims.
 
 ## Builds & Platforms
@@ -54,7 +55,7 @@ The only task tracker for putting the repos together. Each repo keeps its own TO
   - [ ] Connect AbstractX C++ TLP client over socket/shm to Verilator simulation.
 
 ## Pico 2 I/O Companion (`[SPEC-FLIGHT-11]`)
-- [ ] Create `tcmichals/abstractx-pico2-offload` (public). First commit: `AGENTS.md`, `docs/SPECIFICATION.md`, `engineering_log.md`, licence, on SpecTrace ([SPEC-FLIGHT-12]).
+- [x] Create `tcmichals/abstractx-pico2-offload` (public), first commit `722cc58`: spec `[SPEC-OFFLOAD-01..06]`, `AGENTS.md`, `engineering_log.md`, skills, GPL-3.0-or-later; SpecTrace checks clean.
 - [ ] Add it to `default.xml`, the [SPEC-FLIGHT-05] owner table, `README.md` and `tools/check_isolation.py`.
 - [ ] Move ESC passthrough, 4-way and MSP from `rt-fc-offloader/firmware` into it; mark `rt-fc-offloader`'s Pico path retired.
 - [ ] Compare `rt-fc-offloader`'s `dshot.pio` and `esc_pio_uart.pio` (run on hardware) with `pio2`'s `dshot_bidir.pio` and `esc_serial.pio`; keep one copy, in `pio2`.

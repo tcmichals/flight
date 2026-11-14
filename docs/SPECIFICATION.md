@@ -137,10 +137,14 @@
 * **Not implemented yet**: `abstractx-pico2-offload` does not exist. The link has no owner (AbstractX's `TLP_BUS_SPECIFICATION.md` is the likely one). `abstractx-fpga`'s `asp_spi_frontend` has no exchange command, no dummy bytes and no IO1 status. The link watchdog timeout is not chosen. `inav/docs/ARCHITECTURE.md` still describes a Gowin companion. Nothing has run on hardware.
 
 ### `[SPEC-FLIGHT-12]` Every Project Follows AbstractX's SpecTrace
-* **Requirement**: every project in `default.xml` that holds our code follows AbstractX's SpecTrace, run from the `AbstractX/` checkout with `--root <project>`:
-  requirements in `*SPECIFICATION.md` with `Verified by` lines naming real skills, `@impl` and `@verifies` tags, and an `engineering_log.md` with AbstractX's categories.
-  Upstream checkouts (`buildroot`) are exempt. A new project starts this way on its first commit.
+* **Requirement**: these projects follow AbstractX's SpecTrace, run from the `AbstractX/` checkout with `--root <project>`:
+  `flight`, `AbstractX`, `pio2`, `abstractx-fpga` and `abstractx-pico2-offload`, and any new project unless the owner exempts it.
+  That means requirements in `*SPECIFICATION.md` with `Verified by` lines naming real skills, `@impl` and `@verifies` tags, and an `engineering_log.md` with AbstractX's categories.
+  A new project starts this way on its first commit.
+  Exempt: `inav` and `cubie-a5e` (owner's decisions, 2026-11-13) and the upstream checkouts `buildroot` and `linux-cubie`.
 * **Why**: owner's decision, 2026-11-13. One process across the repos, so evidence and lessons are found in the same place in each.
 * **Verified by**: `spec-change-review`
 * **Implementation Target**: `CMakeLists.txt`
-* **Not implemented yet**: no workspace target runs the SpecTrace checks with `--root` for each project. `inav` has no SpecTrace tags or checks (`TODO.md`). Projects other than `flight` and `AbstractX` have not been checked against this.
+* **Not implemented yet**: no workspace target runs the SpecTrace checks with `--root` for each project. Measured 2026-11-13 at the pinned commits with AbstractX `12e7800`:
+  * `pio2`: drift in 23 requirements, 2 unbacked `@verifies`, 0 BROKEN.
+  * `abstractx-fpga`: drift in 1 requirement, 3 unbacked `@verifies`, 2 BROKEN (`[SPEC-TN20K-01]`, `[SPEC-TN20K-02]` name `fpga-build`, which it has no skill for).
